@@ -10,9 +10,17 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/Client/sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/Client/Mainform.fxml"));
         primaryStage.setTitle("GBF Client");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root));
+
+        //dev
+        BaseClient bc = new BaseClient();
+        //bc.connect("localhost",8189);
+        //bc.authorize("login1","pass1");
+        //bc.clientActivityStart();
+
+
         primaryStage.show();
     }
 

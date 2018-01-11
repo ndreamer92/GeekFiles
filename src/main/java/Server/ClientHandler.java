@@ -46,6 +46,7 @@ public class ClientHandler {
                                 //При успешной авторизации - переходим в состояние работы (можем выполнять все функции по работе с файлами)
                                 {
                                         if(str.startsWith("/auth")){
+                                            System.out.println("Попытка авторизации");
                                             String[] elements = str.split(" ");
                                             String nick = server.getAuthService().getNickByLoginPass(elements[1], elements[2]);
                                             if(nick != null){
