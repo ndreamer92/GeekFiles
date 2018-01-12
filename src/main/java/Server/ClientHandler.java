@@ -14,6 +14,7 @@ public class ClientHandler {
     private DataInputStream in;
     private String name;
     private int state;
+    private int prevState;
 
     public ClientHandler(Socket socket, Server server){
         try{
@@ -35,6 +36,8 @@ public class ClientHandler {
                     try{
                         //Тут будет общение клиента с сервером
                         str = in.readUTF();
+                        System.out.println(str);
+
                         if(str.equalsIgnoreCase("/end")) {
                             break;
                         }
@@ -67,6 +70,11 @@ public class ClientHandler {
                             case 10:
                             {
 
+                                if (str.startsWith("/getlist")) {
+                                    System.out.println("Client" + name + "запросил список файлов");
+                                    sendMessage("/getlist 1.txt 2.txt 3.txt 4.txt");
+                                }
+
                                 if (str.startsWith("/loadnew")) {
                                     System.out.println("Client" + name + "инициириует загрузку нового файла на сервер");
                                 }
@@ -93,11 +101,14 @@ public class ClientHandler {
 
 
                     }catch(EOFException e){}
+                    if (state != prevState)
+                        System.out.println("Client " + name + " changed state to: " + state);
+                    prevState = state;
                 }
             }catch(IOException e){
                 e.printStackTrace();
             }finally{
-
+                server.unsubscribeMe(this);
                 try{
                     socket.close();
                 }catch(IOException e){

@@ -12,6 +12,7 @@ public class BaseClient {
         private boolean isConnected;
         private boolean isAuthorized;
         private int state;
+        private String[] filelist;
 
         public BaseClient(){
 
@@ -34,7 +35,7 @@ public class BaseClient {
 
         public void authorize(String login, String pwd){
             try {//попытка авторизации
-                out.writeUTF("/auth" + login + " " + pwd);
+                out.writeUTF("/auth " + login + " " + pwd);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -44,13 +45,39 @@ public class BaseClient {
             return isAuthorized;
         }
 
+        public void getFileList(){
+            if (state == 10)
+                state = 20;
+        }
+
         public void clientActivityStart(){//основная деятельность клиентского приложения
             new Thread(()->{//Рабочий поток
                 while(true){
                     try {
                         String msg = in.readUTF();
-                        if (msg.startsWith("/authok")){
-                            System.out.println("yoba");
+                        switch (state) {
+                            case 0:
+                                if (msg.startsWith("/authok")) {
+                                    System.out.println("Успешная авторизация");
+                                    state = 10;
+                                }
+                                break;
+
+                            case 10://авторизованы, соеденены и ждем команды
+
+                                break;
+
+                            case 20://Запрос списка файлов
+                                out.writeUTF("/getlist");
+                                state = 21; //Ждем ответ
+                                break;
+                            case 21:
+                                if (msg.startsWith("/getlist"))
+                                    filelist = msg.split(" ");
+                                System.out.println(filelist.toString());
+                                    state=10;
+                                break;
+
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

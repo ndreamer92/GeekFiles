@@ -25,7 +25,7 @@ public class Server {
             System.out.println("Сервер запущен, ждем клиентов");
             while(true){
                 socket = server.accept(); //режим ожидания, возвращает объект типа сокет, блокирует выполнение кода
-
+                subscribeMe(new ClientHandler(socket, this));
                 System.out.println(LocalDateTime.now() + " Клиент подключился");
             }
         }catch(IOException e){
@@ -51,5 +51,12 @@ public class Server {
         for(ClientHandler c: clients){
             c.sendMessage(msg);
         }
+    }
+
+    public void subscribeMe(ClientHandler c){
+        clients.add(c);
+    }
+    public void unsubscribeMe(ClientHandler c){
+        clients.remove(c);
     }
 }
