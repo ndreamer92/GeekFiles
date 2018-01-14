@@ -4,18 +4,20 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 public class BaseClient {
+        Logger log;
         private Socket socket;
         private DataInputStream in;
         private DataOutputStream out;
         private boolean isConnected;
         private boolean isAuthorized;
-        private int state;
+        private int state,prevState;
         private String[] filelist;
 
         public BaseClient(){
-
+            log = Logger.getLogger("BaseClient");
         }
 
         public void connect (String host, int port){//Подключаемся
@@ -58,33 +60,40 @@ public class BaseClient {
                         switch (state) {
                             case 0:
                                 if (msg.startsWith("/authok")) {
-                                    System.out.println("Успешная авторизация");
-                                    state = 10;
+                                    log.info("Успешная авторизация");
+                                    isAuthorized = true;
+                                    state = 20;
                                 }
-                                break;
+                                //break;
 
                             case 10://авторизованы, соеденены и ждем команды
-
-                                break;
+;
+                                //break;
 
                             case 20://Запрос списка файлов
                                 out.writeUTF("/getlist");
                                 state = 21; //Ждем ответ
-                                break;
+                                //break;
+
                             case 21:
                                 if (msg.startsWith("/getlist"))
                                     filelist = msg.split(" ");
                                 System.out.println(filelist.toString());
                                     state=10;
-                                break;
+                                //break;
 
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    if (state != prevState) {
+                        log.info("Клиент изменил состояние c: " + prevState + " на " + state);
+                    }
 
                 }
+
             }).start();
+            log.info("Поток закрылся!");
         }
 
 }

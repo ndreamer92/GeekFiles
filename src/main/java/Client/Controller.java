@@ -1,25 +1,42 @@
 package Client;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
 import javafx.event.ActionEvent;
+import javafx.scene.control.ListView;
 
-public class Controller {
-    BaseClient bc;
+public class Controller  implements NCEventListener{
+    //BaseClient bc;
+    NetworkClient nc = NetworkClient.getInstance();
+
+    @FXML
+    private ListView fileList;
 
     @FXML
     public void onPressConnect(ActionEvent actionEvent) {
-        bc = new BaseClient();
-        bc.connect("localhost",8189);
-        bc.clientActivityStart();
+        nc.addListener(this);
     }
 
     @FXML
     public void onPressAuth(ActionEvent actionEvent) {
-        bc.authorize("login1","pass1");
+        nc.authorize("login1","pass1");
     }
 
+    @FXML
     public void onPressGetList(ActionEvent actionEvent) {
-        bc.getFileList();
+        nc.refreshFileList();
     }
+
+    @Override
+    public void onFileListRefresh(int hash) {
+        String[] fl = null;
+        fl = nc.getFilelist();
+        ObservableList<String> items = FXCollections.observableArrayList(fl);
+        fileList.setItems(items);
+    }
+
+
+
 }

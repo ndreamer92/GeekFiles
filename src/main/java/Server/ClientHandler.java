@@ -6,8 +6,10 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.time.LocalDateTime;
+import java.util.logging.Logger;
 
 public class ClientHandler {
+    Logger log;
     private Socket socket;
     private Server server;
     private DataOutputStream out;
@@ -18,6 +20,7 @@ public class ClientHandler {
 
     public ClientHandler(Socket socket, Server server){
         try{
+            log = Logger.getLogger("ClientHandler");
             this.socket = socket;
             this.server = server;
             name = "";
@@ -36,9 +39,9 @@ public class ClientHandler {
                     try{
                         //Тут будет общение клиента с сервером
                         str = in.readUTF();
-                        System.out.println(str);
 
                         if(str.equalsIgnoreCase("/end")) {
+                            log.info("Клиент завершил сеанс");
                             break;
                         }
 
@@ -49,14 +52,14 @@ public class ClientHandler {
                                 //При успешной авторизации - переходим в состояние работы (можем выполнять все функции по работе с файлами)
                                 {
                                         if(str.startsWith("/auth")){
-                                            System.out.println("Попытка авторизации");
+                                            log.info("Попытка авторизации от " + socket.getInetAddress());
                                             String[] elements = str.split(" ");
                                             String nick = server.getAuthService().getNickByLoginPass(elements[1], elements[2]);
                                             if(nick != null){
                                                 if(!server.isNickBusy(nick)){
                                                     sendMessage("/authok" + nick);
                                                     this.name = nick;
-                                                    server.broadcast(this.name + " успешно авторизовался!");
+                                                    log.info(this.name + " успешно авторизовался!");
                                                     state = 10;  //Смена состояния
                                                     break;
                                                 }else sendMessage("Учетная запись используется");
@@ -69,30 +72,31 @@ public class ClientHandler {
                             //Основное состояние - в нем мы ждем команды (загрузка, скачивание, удаление, обновление, /перемещение)
                             case 10:
                             {
-
+                                if (str != "")
+                                    log.info(str);
                                 if (str.startsWith("/getlist")) {
-                                    System.out.println("Client" + name + "запросил список файлов");
+                                    log.info("Client" + name + "запросил список файлов");
                                     sendMessage("/getlist 1.txt 2.txt 3.txt 4.txt");
                                 }
 
                                 if (str.startsWith("/loadnew")) {
-                                    System.out.println("Client" + name + "инициириует загрузку нового файла на сервер");
+                                    log.info("Client" + name + "инициириует загрузку нового файла на сервер");
                                 }
 
                                 if (str.startsWith("/download")) {
-                                    System.out.println("Client" + name + "инициириует загрузку файла с сервера");
+                                    log.info("Client" + name + "инициириует загрузку файла с сервера");
                                 }
 
                                 if (str.startsWith("/delete")) {
-                                    System.out.println("Client" + name + "инициириует удаление файла");
+                                    log.info("Client" + name + "инициириует удаление файла");
                                 }
 
                                 if (str.startsWith("/update")) {
-                                    System.out.println("Client" + name + "инициириует обновление файла");
+                                    log.info("Client" + name + "инициириует обновление файла");
                                 }
 
                                 if (str.startsWith("/move")) {
-                                    System.out.println("Client" + name + "инициириует обновление файла");
+                                    log.info("Client" + name + "инициириует обновление файла");
                                 }
                             }
 
@@ -102,7 +106,7 @@ public class ClientHandler {
 
                     }catch(EOFException e){}
                     if (state != prevState)
-                        System.out.println("Client " + name + " changed state to: " + state);
+                    log.info("Клиент " + name + " изменил состояние алгоритма на: " + state);
                     prevState = state;
                 }
             }catch(IOException e){
@@ -129,7 +133,7 @@ public class ClientHandler {
             if (this.name.equalsIgnoreCase(""))
             {
                 sendMessage("Время для авторизации вышло - соединение закрыто");
-                System.out.println(LocalDateTime.now() + " Клиент не авторизовался - отключаем");
+                log.info(" Клиент не авторизовался - отключаем");
                 try{
                     socket.close();
                 }catch(IOException e){
