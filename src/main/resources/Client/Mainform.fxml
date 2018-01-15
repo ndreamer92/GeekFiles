@@ -48,12 +48,10 @@
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="375.0" prefWidth="525.0" VBox.vgrow="ALWAYS">
          <children>
-            <Button fx:id="bConnect" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onPressConnect" text="Connect" />
-            <Button fx:id="bAuth" layoutX="81.0" layoutY="14.0" mnemonicParsing="false" onAction="#onPressAuth" prefHeight="25.0" prefWidth="60.0" text="Auth" />
-            <ListView fx:id="fileList" layoutX="17.0" layoutY="48.0" prefHeight="128.0" prefWidth="275.0" />
-            <Button fx:id="bGetList" layoutX="17.0" layoutY="188.0" mnemonicParsing="false" onAction="#onPressGetList" text="Update" />
+            <ListView fx:id="fileList" layoutX="14.0" layoutY="14.0" prefHeight="128.0" prefWidth="275.0" />
+            <Button fx:id="bGetList" layoutX="14.0" layoutY="154.0" mnemonicParsing="false" onAction="#onPressGetList" text="Update" />
          </children>
     </AnchorPane>
   </children>

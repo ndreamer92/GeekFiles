@@ -16,10 +16,10 @@
                   <Font size="22.0" />
                </font>
             </Label>
-            <Button fx:id="btnConnect" layoutX="370.0" layoutY="46.0" mnemonicParsing="false" onAction="#onPressConnect" text="Подключение" />
-            <Button fx:id="bAuthorize" layoutX="349.0" layoutY="125.0" mnemonicParsing="false" onAction="#onPressAuthorize" prefHeight="25.0" prefWidth="93.0" text="Авторизация" />
-            <TextField layoutX="31.0" layoutY="125.0" />
-            <PasswordField layoutX="194.0" layoutY="125.0" />
+            <Button fx:id="btnConnect" layoutX="197.0" layoutY="61.0" mnemonicParsing="false" onAction="#onPressConnect" text="Подключение" />
+            <Button fx:id="bAuthorize" disable="true" layoutX="349.0" layoutY="125.0" mnemonicParsing="false" onAction="#onPressAuthorize" prefHeight="25.0" prefWidth="93.0" text="Авторизация" />
+            <TextField fx:id="fieldUserID" editable="false" layoutX="31.0" layoutY="125.0" />
+            <PasswordField fx:id="fieldPassword" editable="false" layoutX="194.0" layoutY="125.0" />
             <Label layoutX="31.0" layoutY="101.0" text="UserID" />
             <Label layoutX="194.0" layoutY="101.0" text="Password" />
          </children>

@@ -37,12 +37,26 @@ public class NetworkClient {
         }
     }
 
+    private void fireOnSuccesfullAuthorization(){
+        for (NCEventListener listener : listeners){
+            listener.onSuccesfullAuthorization();
+        }
+    }
+
+    private void fireOnSuccesfullConnection(){
+        for (NCEventListener listener : listeners){
+            listener.onSuccesfullConnection();
+        }
+    }
+
+
     public void connect (String host, int port){//Подключаемся
         try{
             socket = new Socket("localhost", 8189);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
             log.info("Успешное подключение!");
+            fireOnSuccesfullConnection();
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -57,6 +71,7 @@ public class NetworkClient {
                     try {
                        String msg = in.readUTF();
                         if (msg.startsWith("/authok")){
+                            fireOnSuccesfullAuthorization();
                             log.info("Успешная авторизация");
                         break;
                         }

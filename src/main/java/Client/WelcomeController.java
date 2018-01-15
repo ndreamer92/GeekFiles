@@ -1,14 +1,25 @@
 package Client;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-public class WelcomeController {
+public class WelcomeController implements NCEventListener{
     NetworkClient nc = NetworkClient.getInstance();
 
+    @FXML
+    private Button bAuthorize;
+    @FXML
+    private TextField fieldUserID;
+    @FXML
+    private PasswordField fieldPassword;
+
+    @FXML
     private Scene secondScene;
+    @FXML
 
     public void setSecondScene(Scene scene) {
         secondScene = scene;
@@ -20,11 +31,29 @@ public class WelcomeController {
     }
 
     public void onPressConnect(ActionEvent actionEvent) {
+        nc.addListener(this);
         nc.connect("localhost",8189);
     }
 
     public void onPressAuthorize(ActionEvent actionEvent) {
         nc.authorize("login1","pass1");
         openMainForm(actionEvent);
+    }
+
+    @Override
+    public void onFileListRefresh() {
+
+    }
+
+    @Override
+    public void onSuccesfullAuthorization() {
+
+    }
+
+    @Override
+    public void onSuccesfullConnection() {
+        bAuthorize.setDisable(false);
+        fieldUserID.setEditable(true);
+        fieldPassword.setEditable(true);
     }
 }

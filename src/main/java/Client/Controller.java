@@ -37,6 +37,15 @@ public class Controller  implements NCEventListener{
         fileList.setItems(items);
     }
 
+    @Override
+    public void onSuccesfullAuthorization() {
+
+    }
+
+    @Override
+    public void onSuccesfullConnection() {
+
+    }
 
 
 }
