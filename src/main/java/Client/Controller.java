@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.ListView;
 
 public class Controller  implements NCEventListener{
-    //BaseClient bc;
     NetworkClient nc = NetworkClient.getInstance();
 
     @FXML
