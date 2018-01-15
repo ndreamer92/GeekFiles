@@ -33,7 +33,7 @@ public class NetworkClient {
 
     private void fireFileListChanged(){
         for (NCEventListener listener : listeners){
-            listener.onFileListRefresh(102);
+            listener.onFileListRefresh();
         }
     }
 

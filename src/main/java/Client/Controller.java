@@ -30,7 +30,7 @@ public class Controller  implements NCEventListener{
     }
 
     @Override
-    public void onFileListRefresh(int hash) {
+    public void onFileListRefresh() {
         String[] fl = null;
         fl = nc.getFilelist();
         ObservableList<String> items = FXCollections.observableArrayList(fl);

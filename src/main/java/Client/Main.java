@@ -10,9 +10,20 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/Client/Welcome.fxml"));
-        primaryStage.setTitle("GBF Client");
-        primaryStage.setScene(new Scene(root));
+
+        //Создание сцен (авторизации и основной формы)
+        FXMLLoader loginPane = new FXMLLoader(getClass().getResource("/Client/Welcome.fxml"));
+        Parent lp = loginPane.load();
+        Scene loginScene = new Scene(lp);
+
+        FXMLLoader mainformPane = new FXMLLoader(getClass().getResource("/Client/Mainform.fxml"));
+        Parent mp = mainformPane.load();
+        Scene mainformScene = new Scene(mp);
+
+        WelcomeController welcomeController = (WelcomeController) loginPane.getController();
+        welcomeController.setSecondScene(mainformScene);
+
+        primaryStage.setScene(loginScene);
         primaryStage.show();
     }
 
