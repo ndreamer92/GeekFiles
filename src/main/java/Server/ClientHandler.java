@@ -1,11 +1,9 @@
 package Server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.IOException;
+import zCommon.GBFUser;
+
+import java.io.*;
 import java.net.Socket;
-import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
 public class ClientHandler {
@@ -13,10 +11,14 @@ public class ClientHandler {
     private Socket socket;
     private Server server;
     private DataOutputStream out;
+    private ObjectOutputStream objout;
     private DataInputStream in;
+    private ObjectInputStream objin;
     private String name;
     private int state;
     private int prevState;
+    private GBFUser gbfUser;
+    private FileSystem fileSystem;
 
     public ClientHandler(Socket socket, Server server){
         try{
@@ -25,9 +27,10 @@ public class ClientHandler {
             this.server = server;
             name = "";
             state = 0;
-
+            fileSystem = FileSystem.getInstance();
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
+            objout = new ObjectOutputStream(socket.getOutputStream());
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -59,12 +62,13 @@ public class ClientHandler {
                                                 if(!server.isNickBusy(nick)){
                                                     sendMessage("/authok" + nick);
                                                     this.name = nick;
+                                                    gbfUser = new GBFUser("yoba","e12244fsfasdasd", fileSystem.getUserFileList("e12244fsfasdasd"));
                                                     log.info(this.name + " успешно авторизовался!");
                                                     state = 10;  //Смена состояния
                                                     break;
-                                                }else sendMessage("Учетная запись используется");
-                                            }else sendMessage("Не верные логин/пароль");
-                                        }else sendMessage("Для начала нужно авторизоваться");
+                                                }else sendMessage("/Authfail Учетная запись используется");
+                                            }else sendMessage("/Authfail Не верные логин/пароль");
+                                        }else sendMessage("/Authfail Для начала нужно авторизоваться");
 
                                 }
                                 break;
@@ -75,8 +79,9 @@ public class ClientHandler {
                                 if (str != "")
                                     log.info(str);
                                 if (str.startsWith("/getlist")) {
-                                    log.info("Client" + name + "запросил список файлов");
-                                    sendMessage("/getlist 1.txt 2.txt 3.txt 4.txt");
+                                    log.info("Client " + name + " запросил список файлов");
+                                    //sendMessage("/getlist 1.txt 2.txt 3.txt 4.txt");
+                                    sendObject(gbfUser);
                                 }
 
                                 if (str.startsWith("/loadnew")) {
@@ -149,6 +154,15 @@ public class ClientHandler {
             out.writeUTF(msg);
             out.flush();
         }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void sendObject(Object obj){
+        try{
+            objout.writeObject(obj);
+            objout.flush();
+        }catch (IOException e){
             e.printStackTrace();
         }
     }

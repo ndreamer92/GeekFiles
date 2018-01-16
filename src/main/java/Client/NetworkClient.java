@@ -3,18 +3,22 @@ package Client;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Logger;
+import zCommon.FSFile;
+import zCommon.GBFUser;
 
 public class NetworkClient {
     private static NetworkClient ourInstance = new NetworkClient();
     Logger log;
+    GBFUser gbfUser;
     private ArrayList<NCEventListener> listeners = new ArrayList<NCEventListener>();
     private Socket socket;
     private DataInputStream in;
+    private ObjectInputStream objin;
     private DataOutputStream out;
-    private String[] filelist;
     private NetworkClient() {
         log = Logger.getLogger("ClientHandler");
     }
@@ -55,6 +59,7 @@ public class NetworkClient {
             socket = new Socket("localhost", 8189);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
+            objin = new ObjectInputStream(socket.getInputStream());
             log.info("Успешное подключение!");
             fireOnSuccesfullConnection();
         }catch(IOException e){
@@ -75,6 +80,8 @@ public class NetworkClient {
                             log.info("Успешная авторизация");
                         break;
                         }
+                        if (msg.startsWith("/Authfail"))
+                            log.info("Ошибка при авторизации");
                     }catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -92,13 +99,12 @@ public class NetworkClient {
             new Thread(()-> {//Ловим ответ от сервера
                 while (true){
                     try {
-                        String msg = in.readUTF();
-                        if (msg.startsWith("/getlist")){
-                            filelist = msg.split(" ");
-                            fireFileListChanged();
-                            break;
-                        }
-                    }catch (IOException e) {
+                        Object msg = objin.readObject();
+                        gbfUser = (GBFUser)msg;
+                        System.out.println(gbfUser.getFileList().get(0).getName());
+                        fireFileListChanged();
+                        System.out.println(msg.toString());
+                    }catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
                 }
@@ -110,7 +116,7 @@ public class NetworkClient {
     }
 
     public String[] getFilelist() {
-        return filelist;
+        return null;
     }
 
 }
