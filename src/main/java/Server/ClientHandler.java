@@ -1,6 +1,6 @@
 package Server;
 
-import zCommon.GBFUser;
+import zGBFCommon.GBFUser;
 
 import java.io.*;
 import java.net.Socket;

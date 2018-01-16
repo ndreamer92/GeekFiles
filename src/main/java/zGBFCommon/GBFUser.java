@@ -1,4 +1,4 @@
-package zCommon;
+package zGBFCommon;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -12,6 +12,14 @@ public class GBFUser implements Serializable {
         this.name = name;
         this.uid = uid;
         this.fileList = fileList;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     public LinkedList<FSFile> getFileList() {

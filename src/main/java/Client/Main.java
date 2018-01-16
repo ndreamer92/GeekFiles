@@ -25,6 +25,7 @@ public class Main extends Application {
 
         primaryStage.setScene(loginScene);
         primaryStage.show();
+
     }
 
 

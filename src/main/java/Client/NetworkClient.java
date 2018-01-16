@@ -7,8 +7,8 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-import zCommon.FSFile;
-import zCommon.GBFUser;
+
+import zGBFCommon.GBFUser;
 
 public class NetworkClient {
     private static NetworkClient ourInstance = new NetworkClient();

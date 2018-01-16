@@ -36,7 +36,7 @@ public class WelcomeController implements NCEventListener{
     }
 
     public void onPressAuthorize(ActionEvent actionEvent) {
-        nc.authorize("login1","pass1");
+        nc.authorize(fieldUserID.getText(),fieldPassword.getText());
         openMainForm(actionEvent);
     }
 
@@ -55,5 +55,11 @@ public class WelcomeController implements NCEventListener{
         bAuthorize.setDisable(false);
         fieldUserID.setEditable(true);
         fieldPassword.setEditable(true);
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Успешное подключение");
+        alert.setHeaderText(null);
+        alert.setContentText("Установлено подключение к серверу ");
+        alert.showAndWait();
     }
 }

@@ -14,16 +14,6 @@ public class Controller  implements NCEventListener{
     private ListView fileList;
 
     @FXML
-    public void onPressConnect(ActionEvent actionEvent) {
-        nc.addListener(this);
-    }
-
-    @FXML
-    public void onPressAuth(ActionEvent actionEvent) {
-        nc.authorize("login1","pass1");
-    }
-
-    @FXML
     public void onPressGetList(ActionEvent actionEvent) {
         nc.refreshFileList();
     }

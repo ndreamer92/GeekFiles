@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.control.*?>
@@ -7,7 +8,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" fx:controller="Client.Controller">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controller">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -50,8 +51,8 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="375.0" prefWidth="525.0" VBox.vgrow="ALWAYS">
          <children>
-            <ListView fx:id="fileList" layoutX="14.0" layoutY="14.0" prefHeight="128.0" prefWidth="275.0" />
-            <Button fx:id="bGetList" layoutX="14.0" layoutY="154.0" mnemonicParsing="false" onAction="#onPressGetList" text="Update" />
+            <ListView fx:id="fileList" layoutX="14.0" layoutY="14.0" prefHeight="314.0" prefWidth="275.0" />
+            <Button fx:id="bGetList" layoutX="234.0" layoutY="336.0" mnemonicParsing="false" onAction="#onPressGetList" text="Update" />
          </children>
     </AnchorPane>
   </children>

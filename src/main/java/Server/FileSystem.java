@@ -1,6 +1,6 @@
 package Server;
 
-import zCommon.FSFile;
+import zGBFCommon.FSFile;
 
 import java.io.File;
 import java.io.IOException;
