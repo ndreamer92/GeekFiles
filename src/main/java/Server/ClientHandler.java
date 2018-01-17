@@ -30,7 +30,6 @@ public class ClientHandler {
             fileSystem = FileSystem.getInstance();
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
-            objout = new ObjectOutputStream(socket.getOutputStream());
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -80,7 +79,7 @@ public class ClientHandler {
                                     log.info(str);
                                 if (str.startsWith("/getlist")) {
                                     log.info("Client " + name + " запросил список файлов");
-                                    //sendMessage("/getlist 1.txt 2.txt 3.txt 4.txt");
+                                    gbfUser.setFileList(fileSystem.getUserFileList(gbfUser.getUid()));
                                     sendObject(gbfUser);
                                 }
 
@@ -160,6 +159,7 @@ public class ClientHandler {
 
     public void sendObject(Object obj){
         try{
+            objout = new ObjectOutputStream(socket.getOutputStream());
             objout.writeObject(obj);
             objout.flush();
         }catch (IOException e){

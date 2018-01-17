@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import zGBFCommon.FSFile;
 import zGBFCommon.GBFUser;
 
 public class NetworkClient {
@@ -59,7 +60,7 @@ public class NetworkClient {
             socket = new Socket("localhost", 8189);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
-            objin = new ObjectInputStream(socket.getInputStream());
+            //objin = new ObjectInputStream(socket.getInputStream());
             log.info("Успешное подключение!");
             fireOnSuccesfullConnection();
         }catch(IOException e){
@@ -95,28 +96,27 @@ public class NetworkClient {
     public void refreshFileList(){
         try {//Запрос списка файлов
             out.writeUTF("/getlist");
-
-            new Thread(()-> {//Ловим ответ от сервера
-                while (true){
                     try {
+                        objin = new ObjectInputStream(socket.getInputStream());
                         Object msg = objin.readObject();
                         gbfUser = (GBFUser)msg;
-                        System.out.println(gbfUser.getFileList().get(0).getName());
-                        fireFileListChanged();
-                        System.out.println(msg.toString());
                     }catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
+                    }finally {
+                        fireFileListChanged();
                     }
-                }
-            }).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    public String[] getFilelist() {
-        return null;
+    public ArrayList<String> getFilelist() {
+        ArrayList<String> fl=new ArrayList();
+        for (FSFile file:gbfUser.getFileList()) {
+            fl.add(file.getName());
+        }
+        return fl;
     }
 
 }

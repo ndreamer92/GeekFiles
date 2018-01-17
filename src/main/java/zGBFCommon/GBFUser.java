@@ -14,6 +14,10 @@ public class GBFUser implements Serializable {
         this.fileList = fileList;
     }
 
+    public void setFileList(LinkedList<FSFile> fileList) {
+        this.fileList = fileList;
+    }
+
     public String getName() {
         return name;
     }
@@ -24,5 +28,13 @@ public class GBFUser implements Serializable {
 
     public LinkedList<FSFile> getFileList() {
         return fileList;
+    }
+
+    public FSFile getFileByName (String fileName){
+        for (int i = 0; i < fileList.size(); i++) {
+            if (fileList.get(i).getName().equalsIgnoreCase(fileName))
+                return fileList.get(i);
+        }
+        return null;
     }
 }
