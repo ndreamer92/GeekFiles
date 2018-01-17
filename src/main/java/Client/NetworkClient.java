@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import zGBFCommon.Encryptor;
 import zGBFCommon.FSFile;
 import zGBFCommon.GBFUser;
 
@@ -20,6 +21,7 @@ public class NetworkClient {
     private DataInputStream in;
     private ObjectInputStream objin;
     private DataOutputStream out;
+    private Encryptor encryptor;
     private NetworkClient() {
         log = Logger.getLogger("ClientHandler");
     }
@@ -70,7 +72,7 @@ public class NetworkClient {
 
     public void authorize(String login, String pwd){
         try {//попытка авторизации
-            out.writeUTF("/auth " + login + " " + pwd);
+            out.writeUTF("/auth " + Encryptor.encrypt(login) + " " + Encryptor.encrypt(pwd));
 
             new Thread(()-> {//Ловим ответ от сервера
                 while (true){

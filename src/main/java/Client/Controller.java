@@ -8,8 +8,12 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
+import org.springframework.format.datetime.joda.DateTimeParser;
 import zGBFCommon.FSFile;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Controller  implements NCEventListener{
@@ -24,12 +28,7 @@ public class Controller  implements NCEventListener{
     @FXML
     private Label lbModified;
 
-    @FXML
-    public void onPressGetList(ActionEvent actionEvent) {
-        nc.addListener(this);
-        nc.refreshFileList();
-    }
-
+    //Event Listeners
     @Override
     public void onFileListRefresh() {
         ObservableList<String> items = FXCollections.observableArrayList(nc.getFilelist());
@@ -45,13 +44,24 @@ public class Controller  implements NCEventListener{
     public void onSuccesfullConnection() {
 
     }
+    /////
+
+
+    @FXML
+    public void onPressGetList(ActionEvent actionEvent) {
+        nc.addListener(this);
+        nc.refreshFileList();
+    }
+
+
 
 
     public void onFileListClick(MouseEvent mouseEvent) {
-        //System.out.println(fileList.getSelectionModel().getSelectedItem().toString());
         FSFile tFile = nc.gbfUser.getFileByName(fileList.getSelectionModel().getSelectedItem().toString());
         lbFileName.setText(tFile.getName());
-        lbFileSize.setText(tFile.getSize()/1024+ "KB");
-        lbModified.setText("01/01.2018");
+        lbFileSize.setText(tFile.getSize() / 1024+ "KB");
+
+        Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+        lbModified.setText(format.format(tFile.getLastModified()));
     }
 }

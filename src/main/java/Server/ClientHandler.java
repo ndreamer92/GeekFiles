@@ -1,5 +1,6 @@
 package Server;
 
+import zGBFCommon.Encryptor;
 import zGBFCommon.GBFUser;
 
 import java.io.*;
@@ -14,6 +15,7 @@ public class ClientHandler {
     private ObjectOutputStream objout;
     private DataInputStream in;
     private ObjectInputStream objin;
+    private Encryptor encryptor;
     private String name;
     private int state;
     private int prevState;
@@ -56,7 +58,7 @@ public class ClientHandler {
                                         if(str.startsWith("/auth")){
                                             log.info("Попытка авторизации от " + socket.getInetAddress());
                                             String[] elements = str.split(" ");
-                                            String nick = server.getAuthService().getNickByLoginPass(elements[1], elements[2]);
+                                            String nick = server.getAuthService().getNickByLoginPass(Encryptor.decrypt(elements[1]), Encryptor.decrypt(elements[2]));
                                             if(nick != null){
                                                 if(!server.isNickBusy(nick)){
                                                     sendMessage("/authok" + nick);

@@ -54,7 +54,7 @@ public class FileSystem {
         }
         File[] files = userDir.listFiles();
         for (File file: userDir.listFiles()) {
-            fileList.add(new FSFile(file.getName(),file.getPath(),file.length()));
+            fileList.add(new FSFile(file.getName(),file.getPath(),file.length(),file.lastModified()));
         }
         return fileList;
     }

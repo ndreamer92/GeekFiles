@@ -8,13 +8,14 @@ public class FSFile implements Serializable {
     private String path;
     private String extension;
     private long size;
-    private Date lastModified;
+    private long lastModified;
     private String ownerID;
 
-    public FSFile(String name, String path, long size){
+    public FSFile(String name, String path, long size,long lastModified){
         this.name = name;
         this.path = path;
         this. size = size;
+        this.lastModified = lastModified;
     }
 
     public String getName() {
@@ -27,6 +28,10 @@ public class FSFile implements Serializable {
 
     public long getSize(){
         return this.size;
+    }
+
+    public long getLastModified() {
+        return lastModified;
     }
 
     @Override
