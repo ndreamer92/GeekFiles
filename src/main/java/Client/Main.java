@@ -11,6 +11,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
+        NetworkClient nc = NetworkClient.getInstance();
+
         //Создание сцен (авторизации и основной формы)
         FXMLLoader loginPane = new FXMLLoader(getClass().getResource("/Client/Welcome.fxml"));
         Parent lp = loginPane.load();
@@ -25,7 +27,6 @@ public class Main extends Application {
 
         primaryStage.setScene(loginScene);
         primaryStage.show();
-
     }
 
 

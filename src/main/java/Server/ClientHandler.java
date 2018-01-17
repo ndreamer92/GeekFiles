@@ -1,6 +1,7 @@
 package Server;
 
 import zGBFCommon.Encryptor;
+import zGBFCommon.FSFile;
 import zGBFCommon.GBFUser;
 
 import java.io.*;
@@ -15,7 +16,6 @@ public class ClientHandler {
     private ObjectOutputStream objout;
     private DataInputStream in;
     private ObjectInputStream objin;
-    private Encryptor encryptor;
     private String name;
     private int state;
     private int prevState;
@@ -70,7 +70,6 @@ public class ClientHandler {
                                                 }else sendMessage("/Authfail Учетная запись используется");
                                             }else sendMessage("/Authfail Не верные логин/пароль");
                                         }else sendMessage("/Authfail Для начала нужно авторизоваться");
-
                                 }
                                 break;
 
@@ -95,6 +94,11 @@ public class ClientHandler {
 
                                 if (str.startsWith("/delete")) {
                                     log.info("Client" + name + "инициириует удаление файла");
+                                    String[] elements = str.split(" ");
+                                    FSFile fsFile = gbfUser.getFileByName(elements[1]);
+                                    File fFile = new File(fsFile.getPath());
+                                    System.out.println(fsFile.getPath());
+                                    fFile.delete();
                                 }
 
                                 if (str.startsWith("/update")) {

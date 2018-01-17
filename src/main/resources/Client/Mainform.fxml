@@ -29,10 +29,10 @@
                   <Label fx:id="lbModified" layoutX="80.0" layoutY="65.0" prefHeight="17.0" prefWidth="165.0" text="----" />
                </children>
             </Pane>
-            <ToolBar layoutX="331.0" layoutY="17.0" prefHeight="40.0" prefWidth="259.0">
+            <ToolBar layoutX="331.0" layoutY="17.0" prefHeight="40.0" prefWidth="222.0">
               <items>
                 <Button mnemonicParsing="false" text="new" />
-                  <Button mnemonicParsing="false" text="delete" />
+                  <Button fx:id="btnDeleteFile" mnemonicParsing="false" onAction="#onDeleteFile" text="delete" />
                   <Button mnemonicParsing="false" text="rename" />
                   <Button mnemonicParsing="false" text="update" />
               </items>

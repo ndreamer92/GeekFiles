@@ -56,16 +56,22 @@ public class NetworkClient {
         }
     }
 
-
     public void connect (String host, int port){//Подключаемся
         try{
             socket = new Socket("localhost", 8189);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
-            //objin = new ObjectInputStream(socket.getInputStream());
             log.info("Успешное подключение!");
             fireOnSuccesfullConnection();
         }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void disconnect(){
+        try {
+            socket.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -98,6 +104,7 @@ public class NetworkClient {
     public void refreshFileList(){
         try {//Запрос списка файлов
             out.writeUTF("/getlist");
+            log.info("Запрос списка файлов с сервера");
                     try {
                         objin = new ObjectInputStream(socket.getInputStream());
                         Object msg = objin.readObject();
@@ -110,7 +117,16 @@ public class NetworkClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public void deleteFileByName(String filename){
+        try {
+            out.writeUTF("/delete " + filename);
+            log.info("Запрос на удаление файла " + filename);
+            refreshFileList();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public ArrayList<String> getFilelist() {

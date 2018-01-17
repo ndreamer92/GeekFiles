@@ -64,4 +64,8 @@ public class Controller  implements NCEventListener{
         Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
         lbModified.setText(format.format(tFile.getLastModified()));
     }
+
+    public void onDeleteFile(ActionEvent actionEvent) {
+        nc.deleteFileByName(fileList.getSelectionModel().getSelectedItem().toString());
+    }
 }
