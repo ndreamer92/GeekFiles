@@ -5,12 +5,16 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.springframework.format.datetime.joda.DateTimeParser;
 import zGBFCommon.FSFile;
 
+import java.io.File;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -53,9 +57,6 @@ public class Controller  implements NCEventListener{
         nc.refreshFileList();
     }
 
-
-
-
     public void onFileListClick(MouseEvent mouseEvent) {
         FSFile tFile = nc.gbfUser.getFileByName(fileList.getSelectionModel().getSelectedItem().toString());
         lbFileName.setText(tFile.getName());
@@ -67,5 +68,17 @@ public class Controller  implements NCEventListener{
 
     public void onDeleteFile(ActionEvent actionEvent) {
         nc.deleteFileByName(fileList.getSelectionModel().getSelectedItem().toString());
+    }
+
+    public void onPressDownload(ActionEvent actionEvent) {
+        nc.downloadFileFromServer(fileList.getSelectionModel().getSelectedItem().toString());
+    }
+
+    public void onPressLoad(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        File file = fileChooser.showOpenDialog((Stage)((Node)actionEvent.getSource()).getScene().getWindow());
+        nc.uploadFileToServer(new FSFile(file.getName(),file.getPath(),file.length(),file.lastModified()));
+        nc.refreshFileList();
     }
 }

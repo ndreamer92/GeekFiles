@@ -1,15 +1,16 @@
 package Client;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import zGBFCommon.Encryptor;
 import zGBFCommon.FSFile;
+import zGBFCommon.FSFileMessage;
 import zGBFCommon.GBFUser;
 
 public class NetworkClient {
@@ -20,6 +21,7 @@ public class NetworkClient {
     private Socket socket;
     private DataInputStream in;
     private ObjectInputStream objin;
+    private ObjectOutputStream objout;
     private DataOutputStream out;
     private Encryptor encryptor;
     private NetworkClient() {
@@ -114,6 +116,34 @@ public class NetworkClient {
                     }finally {
                         fireFileListChanged();
                     }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void downloadFileFromServer(String filename){
+        try {
+            out.writeUTF("/download " + filename);
+            log.info("Запрос файла с сервера");
+            objin = new ObjectInputStream((socket.getInputStream()));
+            FSFileMessage fm = (FSFileMessage) objin.readObject();
+            Files.write(Paths.get("src/main/java/Client/FS/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void uploadFileToServer(FSFile file){
+        try {
+            out.writeUTF("/loadnew");
+            log.info("Загрузка нового файла на сервер");
+            objout = new ObjectOutputStream((socket.getOutputStream()));
+            FSFileMessage fm = new FSFileMessage(file.getName(),Files.readAllBytes(Paths.get(file.getPath())));
+            objout.writeObject(fm);
+            objout.flush();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -2,10 +2,14 @@ package Server;
 
 import zGBFCommon.Encryptor;
 import zGBFCommon.FSFile;
+import zGBFCommon.FSFileMessage;
 import zGBFCommon.GBFUser;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.logging.Logger;
 
 public class ClientHandler {
@@ -85,28 +89,29 @@ public class ClientHandler {
                                 }
 
                                 if (str.startsWith("/loadnew")) {
-                                    log.info("Client" + name + "инициириует загрузку нового файла на сервер");
+                                    log.info("Client " + name + " инициириует загрузку нового файла на сервер");
+                                    recieveFile();
                                 }
 
                                 if (str.startsWith("/download")) {
-                                    log.info("Client" + name + "инициириует загрузку файла с сервера");
+                                    log.info("Client " + name + " инициириует загрузку файла с сервера");
+                                    FSFile fsFile = gbfUser.getFileByName(str.replace("/download ",""));
+                                    sendFile(fsFile);
                                 }
 
                                 if (str.startsWith("/delete")) {
-                                    log.info("Client" + name + "инициириует удаление файла");
-                                    String[] elements = str.split(" ");
-                                    FSFile fsFile = gbfUser.getFileByName(elements[1]);
+                                    log.info("Client " + name + " инициириует удаление файла");
+                                    FSFile fsFile = gbfUser.getFileByName(str.replace("/delete ",""));
                                     File fFile = new File(fsFile.getPath());
-                                    System.out.println(fsFile.getPath());
                                     fFile.delete();
                                 }
 
                                 if (str.startsWith("/update")) {
-                                    log.info("Client" + name + "инициириует обновление файла");
+                                    log.info("Client " + name + " инициириует обновление файла");
                                 }
 
                                 if (str.startsWith("/move")) {
-                                    log.info("Client" + name + "инициириует обновление файла");
+                                    log.info("Client " + name + " инициириует обновление файла");
                                 }
                             }
 
@@ -170,6 +175,31 @@ public class ClientHandler {
             objout.flush();
         }catch (IOException e){
             e.printStackTrace();
+        }
+    }
+
+    public void sendFile(FSFile fileToSend){
+        try {
+            FSFileMessage fm = new FSFileMessage(fileToSend.getName(), Files.readAllBytes(Paths.get(fileToSend.getPath())));
+            objout = new ObjectOutputStream(socket.getOutputStream());
+            objout.writeObject(fm);
+            objout.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void recieveFile(){
+        try {
+            objin = new ObjectInputStream(socket.getInputStream());
+            FSFileMessage fm = (FSFileMessage) objin.readObject();
+            Files.write(Paths.get("src/main/java/Server/FS/" + gbfUser.getUid() + "/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }finally {
+
         }
     }
     public String getName(){
