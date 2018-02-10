@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="253.0" prefWidth="412.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.RegFormControlller">
+   <children>
+      <Text layoutX="102.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Регистрация" textAlignment="CENTER" wrappingWidth="208.396484375">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Text>
+      <Text layoutX="50.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Логин" />
+      <Text layoutX="50.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Пароль" />
+      <Text layoutX="47.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Подтверждение пароля" />
+      <Button fx:id="btnConfirm" layoutX="112.0" layoutY="214.0" mnemonicParsing="false" onAction="#onPressBtnConfirm" text="Подтвердить" />
+      <Button fx:id="btnCancel" layoutX="263.0" layoutY="214.0" mnemonicParsing="false" onAction="#onPressBtnCancel" text="Отмена" />
+      <PasswordField fx:id="fieldPassConfirm" layoutX="200.0" layoutY="158.0" />
+      <PasswordField fx:id="fieldPass" layoutX="200.0" layoutY="126.0" />
+      <TextField fx:id="fieldLogin" layoutX="200.0" layoutY="93.0" />
+   </children>
+</AnchorPane>

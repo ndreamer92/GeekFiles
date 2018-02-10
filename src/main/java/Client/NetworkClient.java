@@ -8,6 +8,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import zGBFCommon.Encryptor;
 import zGBFCommon.FSFile;
 import zGBFCommon.FSFileMessage;
@@ -24,6 +25,7 @@ public class NetworkClient {
     private ObjectOutputStream objout;
     private DataOutputStream out;
     private Encryptor encryptor;
+
     private NetworkClient() {
         log = Logger.getLogger("ClientHandler");
     }
@@ -56,6 +58,17 @@ public class NetworkClient {
         for (NCEventListener listener : listeners){
             listener.onSuccesfullConnection();
         }
+    }
+
+    public boolean getConnectionState(){
+        Boolean btmp;
+        try {
+            btmp = socket.isConnected();
+        }catch (NullPointerException ex){
+            btmp = false;
+        }
+
+        return btmp;
     }
 
     public void connect (String host, int port){//Подключаемся
@@ -154,6 +167,14 @@ public class NetworkClient {
             out.writeUTF("/delete " + filename);
             log.info("Запрос на удаление файла " + filename);
             refreshFileList();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void regRequest(String login, String pwd){
+        try {
+            out.writeUTF("/reg " + Encryptor.encrypt(login) + " " + Encryptor.encrypt(pwd));
         } catch (IOException e) {
             e.printStackTrace();
         }

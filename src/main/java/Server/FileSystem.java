@@ -4,6 +4,9 @@ import zGBFCommon.FSFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 
 public class FileSystem {
@@ -42,17 +45,16 @@ public class FileSystem {
         return file;
     }
 
-    public LinkedList<FSFile> getUserFileList(String uid){
+    public LinkedList<FSFile> getUserFileList(String hash){
         LinkedList<FSFile> fileList = new LinkedList();
-        File dir = new File(rootCatalog);
         File userDir=null;
-        for (File file : dir.listFiles()){
-            if (file.isDirectory() & file.getName().equalsIgnoreCase(uid)){
-                userDir = new File (rootCatalog + uid.toString());
-                break;
-            }
-        }
-        File[] files = userDir.listFiles();
+        Path userPath = Paths.get(rootCatalog + hash);
+
+        userDir = new File(rootCatalog + hash);
+
+        if (!Files.exists(userPath))
+            userDir.mkdir();
+
         for (File file: userDir.listFiles()) {
             fileList.add(new FSFile(file.getName(),file.getPath(),file.length(),file.lastModified()));
         }

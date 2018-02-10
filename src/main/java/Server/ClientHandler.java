@@ -1,6 +1,5 @@
 package Server;
 
-import zGBFCommon.Encryptor;
 import zGBFCommon.FSFile;
 import zGBFCommon.FSFileMessage;
 import zGBFCommon.GBFUser;
@@ -20,7 +19,7 @@ public class ClientHandler {
     private ObjectOutputStream objout;
     private DataInputStream in;
     private ObjectInputStream objin;
-    private String name;
+    private String hash;
     private int state;
     private int prevState;
     private GBFUser gbfUser;
@@ -31,7 +30,7 @@ public class ClientHandler {
             log = Logger.getLogger("ClientHandler");
             this.socket = socket;
             this.server = server;
-            name = "";
+            hash = "";
             state = 0;
             fileSystem = FileSystem.getInstance();
             in = new DataInputStream(socket.getInputStream());
@@ -62,18 +61,30 @@ public class ClientHandler {
                                         if(str.startsWith("/auth")){
                                             log.info("Попытка авторизации от " + socket.getInetAddress());
                                             String[] elements = str.split(" ");
-                                            String nick = server.getAuthService().getNickByLoginPass(Encryptor.decrypt(elements[1]), Encryptor.decrypt(elements[2]));
-                                            if(nick != null){
-                                                if(!server.isNickBusy(nick)){
-                                                    sendMessage("/authok" + nick);
-                                                    this.name = nick;
-                                                    gbfUser = new GBFUser("yoba","e12244fsfasdasd", fileSystem.getUserFileList("e12244fsfasdasd"));
-                                                    log.info(this.name + " успешно авторизовался!");
+                                            System.out.println(str);
+                                            String hash = server.getAuthService().authorizeByLogPass(elements[1], elements[2]);
+                                            if(hash != null){
+                                                if(!server.isNickBusy(hash)){
+                                                    sendMessage("/authok" + hash);
+                                                    this.hash = hash;
+                                                    gbfUser = new GBFUser(elements[1],hash, fileSystem.getUserFileList(hash));
+                                                    log.info(this.hash + " успешно авторизовался!");
                                                     state = 10;  //Смена состояния
                                                     break;
                                                 }else sendMessage("/Authfail Учетная запись используется");
                                             }else sendMessage("/Authfail Не верные логин/пароль");
-                                        }else sendMessage("/Authfail Для начала нужно авторизоваться");
+                                        };//else sendMessage("/Authfail Для начала нужно авторизоваться");
+
+                                        if (str.startsWith("/reg")){
+                                            log.info("Попытка регистрации от "  + socket.getInetAddress());
+                                            String[] elements = str.split(" ");
+                                            System.out.println(str);
+                                            Boolean regResult = server.getAuthService().regAttempt(elements[1], elements[2]);
+                                            if (regResult)
+                                                sendMessage("/reg ok");
+                                            else
+                                                sendMessage("/reg fail");
+                                        }
                                 }
                                 break;
 
@@ -83,45 +94,36 @@ public class ClientHandler {
                                 if (str != "")
                                     log.info(str);
                                 if (str.startsWith("/getlist")) {
-                                    log.info("Client " + name + " запросил список файлов");
-                                    gbfUser.setFileList(fileSystem.getUserFileList(gbfUser.getUid()));
+                                    log.info("Client " + hash + " запросил список файлов");
+                                    gbfUser.setFileList(fileSystem.getUserFileList(gbfUser.getHash()));
                                     sendObject(gbfUser);
                                 }
 
                                 if (str.startsWith("/loadnew")) {
-                                    log.info("Client " + name + " инициириует загрузку нового файла на сервер");
+                                    log.info("Client " + hash + " инициириует загрузку нового файла на сервер");
                                     recieveFile();
                                 }
 
                                 if (str.startsWith("/download")) {
-                                    log.info("Client " + name + " инициириует загрузку файла с сервера");
+                                    log.info("Client " + hash + " инициириует загрузку файла с сервера");
                                     FSFile fsFile = gbfUser.getFileByName(str.replace("/download ",""));
                                     sendFile(fsFile);
                                 }
 
                                 if (str.startsWith("/delete")) {
-                                    log.info("Client " + name + " инициириует удаление файла");
+                                    log.info("Client " + hash + " инициириует удаление файла");
                                     FSFile fsFile = gbfUser.getFileByName(str.replace("/delete ",""));
                                     File fFile = new File(fsFile.getPath());
                                     fFile.delete();
                                 }
 
-                                if (str.startsWith("/update")) {
-                                    log.info("Client " + name + " инициириует обновление файла");
-                                }
-
-                                if (str.startsWith("/move")) {
-                                    log.info("Client " + name + " инициириует обновление файла");
-                                }
                             }
-
-
                         }
 
 
                     }catch(EOFException e){}
                     if (state != prevState)
-                    log.info("Клиент " + name + " изменил состояние алгоритма на: " + state);
+                    log.info("Клиент " + hash + " изменил состояние алгоритма на: " + state);
                     prevState = state;
                 }
             }catch(IOException e){
@@ -145,7 +147,7 @@ public class ClientHandler {
             }
 
             //Если клиент не авторизовался - закрываем соединение
-            if (this.name.equalsIgnoreCase(""))
+            if (this.hash.equalsIgnoreCase(""))
             {
                 sendMessage("Время для авторизации вышло - соединение закрыто");
                 log.info(" Клиент не авторизовался - отключаем");
@@ -193,7 +195,7 @@ public class ClientHandler {
         try {
             objin = new ObjectInputStream(socket.getInputStream());
             FSFileMessage fm = (FSFileMessage) objin.readObject();
-            Files.write(Paths.get("src/main/java/Server/FS/" + gbfUser.getUid() + "/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
+            Files.write(Paths.get("src/main/java/Server/FS/" + gbfUser.getHash() + "/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -202,7 +204,7 @@ public class ClientHandler {
 
         }
     }
-    public String getName(){
-        return name;
+    public String getHash(){
+        return hash;
     }
 }

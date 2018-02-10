@@ -8,7 +8,10 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.format.datetime.joda.DateTimeParser;
@@ -80,5 +83,26 @@ public class Controller  implements NCEventListener{
         File file = fileChooser.showOpenDialog((Stage)((Node)actionEvent.getSource()).getScene().getWindow());
         nc.uploadFileToServer(new FSFile(file.getName(),file.getPath(),file.length(),file.lastModified()));
         nc.refreshFileList();
+    }
+
+    //Drag-drop файла в лист из ОС
+    public void onDragFile(DragEvent dragEvent) {
+        if (dragEvent.getDragboard().hasFiles()){
+            dragEvent.acceptTransferModes(TransferMode.COPY);
+        }
+        dragEvent.consume();
+    }
+
+    public void onDragDroppedFIle(DragEvent dragEvent) {
+        Dragboard db = dragEvent.getDragboard();
+        boolean success = false;
+        File file = db.getFiles().get(0);
+        if (db.hasFiles()){
+            nc.uploadFileToServer(new FSFile(file.getName(),file.getPath(),file.length(),file.lastModified()));
+            nc.refreshFileList();
+            success = true;
+        }
+        dragEvent.setDropCompleted(success);
+        dragEvent.consume();
     }
 }

@@ -13,7 +13,7 @@
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="365.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
          <children>
-            <ListView fx:id="fileList" layoutX="46.0" layoutY="17.0" onMouseClicked="#onFileListClick" prefHeight="314.0" prefWidth="275.0" />
+            <ListView fx:id="fileList" layoutX="46.0" layoutY="17.0" onDragDropped="#onDragDroppedFIle" onDragOver="#onDragFile" onMouseClicked="#onFileListClick" prefHeight="314.0" prefWidth="275.0" />
             <Button fx:id="bGetList" layoutX="266.0" layoutY="339.0" mnemonicParsing="false" onAction="#onPressGetList" text="Update" />
             <Pane layoutX="331.0" layoutY="68.0" prefHeight="263.0" prefWidth="259.0">
                <effect>

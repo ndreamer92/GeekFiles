@@ -12,21 +12,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         NetworkClient nc = NetworkClient.getInstance();
+        SceneController sc = SceneController.getInstance();
 
-        //Создание сцен (авторизации и основной формы)
-        FXMLLoader loginPane = new FXMLLoader(getClass().getResource("/Client/Welcome.fxml"));
-        Parent lp = loginPane.load();
-        Scene loginScene = new Scene(lp);
-
-        FXMLLoader mainformPane = new FXMLLoader(getClass().getResource("/Client/Mainform.fxml"));
-        Parent mp = mainformPane.load();
-        Scene mainformScene = new Scene(mp);
-
-        WelcomeController welcomeController = (WelcomeController) loginPane.getController();
-        welcomeController.setSecondScene(mainformScene);
-
-        primaryStage.setScene(loginScene);
-        primaryStage.show();
+        sc.initializeSC(primaryStage);
+        sc.startPrimary();
     }
 
 

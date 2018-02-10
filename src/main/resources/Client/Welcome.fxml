@@ -7,9 +7,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="163.0" prefWidth="478.0" xmlns="http://javafx.com/javafx/8" fx:controller="Client.WelcomeController">
+<AnchorPane prefHeight="163.0" prefWidth="478.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.WelcomeController">
    <children>
-      <Pane layoutY="-1.0" prefHeight="172.0" prefWidth="478.0">
+      <Pane layoutY="-1.0" prefHeight="196.0" prefWidth="478.0">
          <children>
             <Label alignment="CENTER" contentDisplay="TOP" layoutX="18.0" layoutY="14.0" prefHeight="32.0" prefWidth="436.0" text="Добро пожаловать!" textAlignment="CENTER">
                <font>
@@ -22,6 +22,7 @@
             <PasswordField fx:id="fieldPassword" editable="false" layoutX="194.0" layoutY="125.0" />
             <Label layoutX="31.0" layoutY="101.0" text="UserID" />
             <Label layoutX="194.0" layoutY="101.0" text="Password" />
+            <Button fx:id="btnReg" disable="true" layoutX="349.0" layoutY="157.0" mnemonicParsing="false" onAction="#onBtnReg" prefHeight="25.0" prefWidth="93.0" text="Регистрация" />
          </children>
       </Pane>
    </children>

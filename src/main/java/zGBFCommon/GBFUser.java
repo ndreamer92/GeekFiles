@@ -5,12 +5,12 @@ import java.util.LinkedList;
 
 public class GBFUser implements Serializable {
     private String name;
-    private String uid;
+    private String hash;
     private LinkedList<FSFile> fileList;
 
-    public GBFUser(String name, String uid, LinkedList<FSFile> fileList){
+    public GBFUser(String name, String hash, LinkedList<FSFile> fileList){
         this.name = name;
-        this.uid = uid;
+        this.hash = hash;
         this.fileList = fileList;
     }
 
@@ -22,8 +22,8 @@ public class GBFUser implements Serializable {
         return name;
     }
 
-    public String getUid() {
-        return uid;
+    public String getHash() {
+        return hash;
     }
 
     public LinkedList<FSFile> getFileList() {
